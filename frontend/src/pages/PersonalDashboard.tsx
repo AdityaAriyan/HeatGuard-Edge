@@ -11,10 +11,14 @@ import {
   AlertTriangle,
   Flame,
   CloudSun,
-  Clock,
-  Radio,
+  Activity,
+  Heart,
+  Droplets,
+  Wind,
   ExternalLink,
   Siren,
+  Sparkles,
+  Radio,
 } from 'lucide-react';
 
 interface PersonalDashboardProps {
@@ -23,7 +27,7 @@ interface PersonalDashboardProps {
 
 export const PersonalDashboard: React.FC<PersonalDashboardProps> = ({ onNavigate }) => {
   const { user, profile, baseline } = useAuth();
-  const { currentPacket, currentRisk, setScenario, currentScenario } = useSimulator();
+  const { currentPacket, currentRisk } = useSimulator();
 
   const isCritical = currentRisk.overallLevel === 'CRITICAL';
   const isHigh = currentRisk.overallLevel === 'HIGH';
@@ -37,7 +41,7 @@ export const PersonalDashboard: React.FC<PersonalDashboardProps> = ({ onNavigate
         badge: 'CRITICAL RISK DETECTED',
         badgeColor: 'badge-risk-critical',
         headline: 'Immediate Safety Hazard Alert',
-        message: currentRisk.reasons[0] || 'Severe multi-system physiological strain detected.',
+        message: currentRisk.reasons[0] || 'Severe multi-system physiological strain detected. Seek immediate cooling shelter and medical assistance.',
       };
     }
     if (isHigh) {
@@ -47,7 +51,7 @@ export const PersonalDashboard: React.FC<PersonalDashboardProps> = ({ onNavigate
         badge: 'HIGH RISK WARNING',
         badgeColor: 'badge-risk-high',
         headline: 'Early Warning: Heat & Physiological Strain',
-        message: currentRisk.reasons[0] || 'Significant deviation from your calibrated baseline.',
+        message: currentRisk.reasons[0] || 'Significant deviation from your calibrated baseline. Take mandatory rest and hydrate.',
       };
     }
     if (isCaution) {
@@ -57,7 +61,7 @@ export const PersonalDashboard: React.FC<PersonalDashboardProps> = ({ onNavigate
         badge: 'CAUTIONARY ELEVATION',
         badgeColor: 'badge-risk-caution',
         headline: 'Mild Environmental & Cardiovascular Strain',
-        message: currentRisk.reasons[0] || 'Monitor fluid intake and avoid prolonged sun exposure.',
+        message: currentRisk.reasons[0] || 'Monitor fluid intake and avoid prolonged direct sun exposure.',
       };
     }
     return {
@@ -66,7 +70,7 @@ export const PersonalDashboard: React.FC<PersonalDashboardProps> = ({ onNavigate
       badge: 'LOW RISK - OPTIMAL',
       badgeColor: 'badge-risk-low',
       headline: 'No Major Abnormality Detected',
-      message: 'All physiological vitals and environmental metrics are within your healthy personal baseline.',
+      message: 'All physiological vitals and environmental metrics are within your calibrated healthy baseline limits.',
     };
   };
 
@@ -77,30 +81,33 @@ export const PersonalDashboard: React.FC<PersonalDashboardProps> = ({ onNavigate
 
   return (
     <div className="space-y-6 pb-12 animate-fadeIn">
-      {/* Top Medical Disclaimer */}
+      {/* Top Medical Compliance Disclaimer */}
       <MedicalDisclaimer />
 
       {/* 1. MAIN HERO: "AM I SAFE RIGHT NOW?" */}
       <div className={`glass-panel p-6 border rounded-2xl ${status.bg} shadow-2xl relative overflow-hidden`}>
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
+          <div className="space-y-2 max-w-3xl">
+            <div className="flex flex-wrap items-center gap-2">
               <span className="text-xs font-mono text-zinc-400">Personal Safety Assessment</span>
               <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold ${status.badgeColor}`}>
                 {status.badge}
               </span>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 border border-white/10 text-cyan-300">
+                Edge-AI Calibrated
+              </span>
             </div>
 
-            <h1 className="text-2xl lg:text-3xl font-extrabold font-display text-white tracking-tight flex items-center gap-3">
+            <h1 className="text-2xl lg:text-3xl font-extrabold font-display text-white tracking-tight flex flex-wrap items-center gap-3">
               <span>Good Day, {user?.full_name?.split(' ')[0] || 'Worker'}</span>
               <span className="text-base font-normal text-zinc-400">| Am I safe right now?</span>
             </h1>
 
-            <p className="text-sm text-zinc-300 max-w-2xl leading-relaxed">{status.message}</p>
+            <p className="text-sm text-zinc-300 leading-relaxed">{status.message}</p>
           </div>
 
-          {/* Large Overall Risk Score Display */}
-          <div className="flex items-center gap-4 p-4 rounded-2xl bg-black/40 border border-white/10 backdrop-blur-md">
+          {/* Large Overall Composite Risk Score Display */}
+          <div className="flex items-center gap-4 p-4 rounded-2xl bg-black/50 border border-white/10 backdrop-blur-md">
             {status.icon}
             <div>
               <div className="text-[10px] uppercase font-mono text-zinc-400 tracking-wider">Overall Composite Risk</div>
@@ -111,7 +118,7 @@ export const PersonalDashboard: React.FC<PersonalDashboardProps> = ({ onNavigate
             </div>
             <button
               onClick={() => onNavigate('/risk-center')}
-              className="ml-2 p-2 rounded-xl bg-white/5 hover:bg-white/10 text-cyan-400 transition"
+              className="ml-2 p-2 rounded-xl bg-white/5 hover:bg-white/10 text-cyan-400 hover:text-cyan-300 transition"
               title="Open Personal Risk Center"
             >
               <ExternalLink className="w-4 h-4" />
@@ -120,7 +127,7 @@ export const PersonalDashboard: React.FC<PersonalDashboardProps> = ({ onNavigate
         </div>
       </div>
 
-      {/* 2. REALTIME VITALS SECTION */}
+      {/* 2. REAL-TIME PHYSIOLOGICAL VITALS */}
       <div>
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-base font-bold font-display text-white tracking-wide flex items-center gap-2">
@@ -129,7 +136,7 @@ export const PersonalDashboard: React.FC<PersonalDashboardProps> = ({ onNavigate
           </h2>
           <button
             onClick={() => onNavigate('/vitals')}
-            className="text-xs text-cyan-400 hover:text-cyan-300 font-medium flex items-center gap-1"
+            className="text-xs text-cyan-400 hover:text-cyan-300 font-medium flex items-center gap-1 font-mono"
           >
             <span>Deep Sensor Stream</span>
             <ExternalLink className="w-3.5 h-3.5" />
@@ -139,7 +146,7 @@ export const PersonalDashboard: React.FC<PersonalDashboardProps> = ({ onNavigate
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <VitalCard
             type="HEART_RATE"
-            label="Heart Rate"
+            label="Heart Rate (MAX30102 PPG)"
             value={currentPacket.heartRate}
             unit="BPM"
             baselineValue={baseline?.baseline_heart_rate ? `${baseline.baseline_heart_rate} BPM` : '72 BPM'}
@@ -149,7 +156,7 @@ export const PersonalDashboard: React.FC<PersonalDashboardProps> = ({ onNavigate
 
           <VitalCard
             type="SPO2"
-            label="SpO₂ Blood Oxygen"
+            label="Blood Oxygen (SpO₂)"
             value={`${currentPacket.spo2}%`}
             unit="%"
             baselineValue={baseline?.baseline_spo2 ? `${baseline.baseline_spo2}%` : '98.5%'}
@@ -159,7 +166,7 @@ export const PersonalDashboard: React.FC<PersonalDashboardProps> = ({ onNavigate
 
           <VitalCard
             type="SKIN_TEMP"
-            label="Skin Temperature"
+            label="Skin Temp (MLX90614)"
             value={`${currentPacket.skinTemperature}°C`}
             unit="°C"
             baselineValue={baseline?.baseline_skin_temp ? `${baseline.baseline_skin_temp}°C` : '36.4°C'}
@@ -169,7 +176,7 @@ export const PersonalDashboard: React.FC<PersonalDashboardProps> = ({ onNavigate
 
           <VitalCard
             type="BLOOD_PRESSURE"
-            label="Blood Pressure"
+            label="Blood Pressure (Modular)"
             value={`${currentPacket.systolic}/${currentPacket.diastolic}`}
             unit="mmHg"
             isEstimated={true}
@@ -181,42 +188,44 @@ export const PersonalDashboard: React.FC<PersonalDashboardProps> = ({ onNavigate
 
       {/* 3. ENVIRONMENTAL CONTEXT & EXPOSURE */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 glass-panel p-5 border border-white/10">
-          <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
+        <div className="lg:col-span-2 glass-panel p-5 border border-white/10 space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-white/10">
             <div className="flex items-center gap-2">
               <CloudSun className="w-5 h-5 text-amber-400" />
-              <h3 className="font-bold text-sm text-white">Local Environmental Stressors</h3>
+              <h3 className="font-bold text-sm text-white">Local Environmental Stressors (SHT31 / Grid)</h3>
             </div>
             <button
               onClick={() => onNavigate('/environment')}
-              className="text-xs text-cyan-400 hover:underline flex items-center gap-1"
+              className="text-xs text-cyan-400 hover:text-cyan-300 font-medium flex items-center gap-1 font-mono"
             >
-              <span>Awareness Details</span>
+              <span>Environmental Console</span>
               <ExternalLink className="w-3 h-3" />
             </button>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
             <div className="p-3 rounded-xl bg-zinc-900/60 border border-white/5">
-              <div className="text-xs text-zinc-400 mb-1">Ambient Temp</div>
+              <div className="text-xs text-zinc-400 mb-1 font-mono">Ambient Temp</div>
               <div className="text-2xl font-bold font-display text-white">{currentPacket.ambientTemperature}°C</div>
+              <div className="text-[10px] text-zinc-500 font-mono">SHT31 Sensor</div>
             </div>
 
             <div className="p-3 rounded-xl bg-zinc-900/60 border border-white/5">
-              <div className="text-xs text-zinc-400 mb-1">Humidity</div>
+              <div className="text-xs text-zinc-400 mb-1 font-mono">Relative Humidity</div>
               <div className="text-2xl font-bold font-display text-white">{currentPacket.humidity}%</div>
+              <div className="text-[10px] text-zinc-500 font-mono">Moisture Saturation</div>
             </div>
 
             <div className="p-3 rounded-xl bg-zinc-900/60 border border-white/5">
-              <div className="text-xs text-zinc-400 mb-1">Air Quality (AQI)</div>
+              <div className="text-xs text-zinc-400 mb-1 font-mono">Air Quality (AQI)</div>
               <div className="text-2xl font-bold font-display text-purple-400">{currentPacket.aqi}</div>
-              <div className="text-[10px] text-zinc-400 font-mono">PM2.5: {currentPacket.pm25} µg</div>
+              <div className="text-[10px] text-zinc-500 font-mono">PM2.5: {currentPacket.pm25} µg</div>
             </div>
 
             <div className="p-3 rounded-xl bg-zinc-900/60 border border-white/5">
-              <div className="text-xs text-zinc-400 mb-1">Outdoor Exposure</div>
+              <div className="text-xs text-zinc-400 mb-1 font-mono">Outdoor Exposure</div>
               <div className="text-2xl font-bold font-display text-cyan-400">{currentPacket.exposureMinutes}m</div>
-              <div className="text-[10px] text-zinc-400 font-mono">Continuous</div>
+              <div className="text-[10px] text-zinc-500 font-mono">Continuous Work</div>
             </div>
           </div>
         </div>
@@ -228,12 +237,12 @@ export const PersonalDashboard: React.FC<PersonalDashboardProps> = ({ onNavigate
       {/* 4. PERSONAL RISK CENTER 6-VECTOR OVERVIEW */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-base font-bold font-display text-white tracking-wide">
-            Personal Risk Center (Prototype Vectors)
+          <h2 className="text-base font-bold font-display text-white tracking-wide flex items-center gap-2">
+            <span>Personal Risk Center (6 Edge-AI Vectors)</span>
           </h2>
           <button
             onClick={() => onNavigate('/risk-center')}
-            className="text-xs text-cyan-400 hover:text-cyan-300 font-medium flex items-center gap-1"
+            className="text-xs text-cyan-400 hover:text-cyan-300 font-medium flex items-center gap-1 font-mono"
           >
             <span>Detailed Breakdown</span>
             <ExternalLink className="w-3.5 h-3.5" />
@@ -272,7 +281,7 @@ export const PersonalDashboard: React.FC<PersonalDashboardProps> = ({ onNavigate
             description="Correlation between ambient PM2.5 particulate matter and SpO₂ oxygen trends."
             subFactors={[
               { label: 'AQI Index', value: currentPacket.aqi },
-              { label: 'SpO2 Delta', value: `${currentRisk.baselineDeltas.spo2Delta}%` },
+              { label: 'SpO₂ Delta', value: `${currentRisk.baselineDeltas.spo2Delta}%` },
             ]}
             onClick={() => onNavigate('/risk-center')}
           />

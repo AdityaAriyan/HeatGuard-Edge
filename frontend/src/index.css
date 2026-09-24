@@ -1,29 +1,34 @@
-/* HeatGuard-Edge Design System */
+/* HeatGuard-Edge — Privacy-Preserving Health & Disaster Safety Design System */
 :root {
+  /* Deep Space Onyx Base Palette */
   --bg-primary: #07090e;
   --bg-secondary: #0c101a;
-  --bg-card: rgba(14, 19, 31, 0.75);
-  --bg-card-hover: rgba(20, 27, 45, 0.9);
+  --bg-tertiary: #121826;
+  --bg-card: rgba(14, 19, 31, 0.85);
+  --bg-card-hover: rgba(20, 27, 45, 0.95);
   --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-highlight: rgba(255, 255, 255, 0.16);
   --border-focus: rgba(6, 182, 212, 0.5);
-  
+
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
 
-  /* Risk & Status Accents */
+  /* Heat & Hazard Status Accents */
   --risk-low: #10b981;
   --risk-low-bg: rgba(16, 185, 129, 0.12);
   --risk-caution: #f59e0b;
   --risk-caution-bg: rgba(245, 158, 11, 0.12);
   --risk-high: #f97316;
-  --risk-high-bg: rgba(249, 115, 22, 0.12);
+  --risk-high-bg: rgba(249, 115, 22, 0.14);
   --risk-critical: #ef4444;
   --risk-critical-bg: rgba(239, 68, 68, 0.18);
 
   --accent-cyan: #06b6d4;
   --accent-blue: #3b82f6;
   --accent-purple: #8b5cf6;
+  --accent-rose: #f43f5e;
+  --accent-amber: #f59e0b;
   
   --font-main: 'Inter', system-ui, -apple-system, sans-serif;
   --font-display: 'Outfit', sans-serif;
@@ -44,6 +49,10 @@ body {
   overflow-x: hidden;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  background-image: 
+    radial-gradient(circle at 20% 10%, rgba(6, 182, 212, 0.03) 0%, transparent 40%),
+    radial-gradient(circle at 80% 60%, rgba(249, 115, 22, 0.025) 0%, transparent 40%);
+  background-attachment: fixed;
 }
 
 /* Scrollbars */
@@ -59,37 +68,23 @@ body {
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(6, 182, 212, 0.4);
 }
 
-/* Glassmorphism & Cards */
+/* Glassmorphism & High-Tech Cards */
 .glass-panel {
   background: var(--bg-card);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-subtle);
   border-radius: 16px;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.38);
   transition: all 0.2s ease-in-out;
+  position: relative;
 }
 
 .glass-panel:hover {
-  border-color: rgba(255, 255, 255, 0.16);
-}
-
-.glass-panel-glow {
-  position: relative;
-  overflow: hidden;
-}
-.glass-panel-glow::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle at center, rgba(6, 182, 212, 0.08) 0%, transparent 70%);
-  pointer-events: none;
+  border-color: var(--border-highlight);
 }
 
 /* Typography Helpers */
@@ -140,6 +135,22 @@ body {
   animation: heartbeat 1.2s infinite ease-in-out;
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+.animate-scaleUp {
+  animation: scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 /* OLED Hardware Display Simulation */
 .oled-screen {
   background-color: #030508;
@@ -163,25 +174,7 @@ body {
   pointer-events: none;
 }
 
-/* Layout Utilities */
-.app-container {
-  display: flex;
-  min-height: 100vh;
-}
-.main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-.page-body {
-  padding: 1.5rem 2rem;
-  max-width: 1440px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-/* Button Reset & Styles */
+/* Buttons */
 button {
   cursor: pointer;
   border: none;
@@ -195,7 +188,7 @@ button {
   padding: 0.6rem 1.2rem;
   border-radius: 10px;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -213,7 +206,7 @@ button {
   padding: 0.75rem 1.5rem;
   border-radius: 12px;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 0.95rem;
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
@@ -221,7 +214,7 @@ button {
   box-shadow: 0 4px 20px rgba(239, 68, 68, 0.4);
 }
 .btn-danger:hover {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   box-shadow: 0 8px 25px rgba(239, 68, 68, 0.6);
 }
 
@@ -232,7 +225,7 @@ button {
   padding: 0.55rem 1.1rem;
   border-radius: 10px;
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;

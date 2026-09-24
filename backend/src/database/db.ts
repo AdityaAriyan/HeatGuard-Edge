@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 let dbInstance: Database | null = null;
-const dbDir = path.resolve(__dirname, '../../../database');
+const dbDir = path.resolve(__dirname, '../../database');
 const dbPath = path.join(dbDir, 'heatguard.sqlite');
 
 export async function getDatabase(): Promise<Database> {

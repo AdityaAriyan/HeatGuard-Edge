@@ -1,15 +1,15 @@
 import React from 'react';
 import { Heart, Activity, Thermometer, Droplets, Wind, ArrowUp, ArrowDown, Minus } from 'lucide-react';
 
-interface VitalCardProps {
+export interface VitalCardProps {
   type: 'HEART_RATE' | 'SPO2' | 'SKIN_TEMP' | 'BLOOD_PRESSURE' | 'HEAT_INDEX' | 'AQI';
   value: string | number;
   unit: string;
   label: string;
   baselineValue?: string | number;
-  delta?: number;
+  delta?: number | string;
   isEstimated?: boolean;
-  status?: 'NORMAL' | 'ELEVATED' | 'CRITICAL';
+  status?: 'NORMAL' | 'ELEVATED' | 'CRITICAL' | 'OPTIMAL' | 'CAUTION' | 'HIGH';
   icon?: React.ReactNode;
 }
 
@@ -45,14 +45,18 @@ export const VitalCard: React.FC<VitalCardProps> = ({
       case 'CRITICAL':
         return 'border-red-500/40 bg-red-950/20 text-red-400';
       case 'ELEVATED':
+      case 'HIGH':
+      case 'CAUTION':
         return 'border-amber-500/40 bg-amber-950/20 text-amber-400';
       default:
         return 'border-white/10 bg-zinc-900/60 text-emerald-400';
     }
   };
 
+  const numDelta = typeof delta === 'number' ? delta : parseFloat(String(delta || '0'));
+
   return (
-    <div className={`glass-panel p-4 flex flex-col justify-between border ${getStatusColor()} hover:scale-[1.02] transition-transform`}>
+    <div className={`glass-panel p-4 flex flex-col justify-between border ${getStatusColor()} hover:scale-[1.015] transition-all duration-200`}>
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           <div className="p-2 rounded-xl bg-white/5 border border-white/10">{getIcon()}</div>
@@ -60,7 +64,7 @@ export const VitalCard: React.FC<VitalCardProps> = ({
         </div>
         {isEstimated && (
           <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-950/80 border border-blue-500/30 text-blue-300">
-            Estimated
+            Estimated BP
           </span>
         )}
       </div>
@@ -68,23 +72,23 @@ export const VitalCard: React.FC<VitalCardProps> = ({
       <div className="my-2">
         <div className="flex items-baseline gap-1.5">
           <span className="text-3xl font-bold font-display tracking-tight text-white">{value}</span>
-          <span className="text-xs font-mono text-zinc-400">{unit}</span>
+          <span className="text-xs font-mono text-zinc-400 uppercase">{unit}</span>
         </div>
       </div>
 
       <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[11px] font-mono">
-        <span className="text-zinc-500">Baseline: {baselineValue || '--'}</span>
+        <span className="text-zinc-400">Baseline: <strong className="text-zinc-200">{baselineValue || '--'}</strong></span>
         {delta !== undefined && delta !== 0 ? (
           <span
             className={`flex items-center gap-0.5 font-semibold ${
-              delta > 0 ? (type === 'SPO2' ? 'text-emerald-400' : 'text-amber-400') : 'text-cyan-400'
+              numDelta > 0 ? (type === 'SPO2' ? 'text-emerald-400' : 'text-amber-400') : 'text-cyan-400'
             }`}
           >
-            {delta > 0 ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />}
-            {delta > 0 ? `+${delta}` : delta} {unit}
+            {numDelta > 0 ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />}
+            {typeof delta === 'number' && delta > 0 ? `+${delta}` : delta} {unit}
           </span>
         ) : (
-          <span className="text-zinc-500 flex items-center gap-0.5">
+          <span className="text-zinc-400 flex items-center gap-0.5">
             <Minus className="w-3 h-3" /> In range
           </span>
         )}

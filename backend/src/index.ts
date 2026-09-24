@@ -3,8 +3,9 @@ import http from 'http';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import apiRoutes from './routes';
-import { getDatabase } from './database/db';
+import { getDatabase, queryRow } from './database/db';
 import { initSchema } from './database/schema';
+import { seedDatabase } from './database/seed';
 import { initWebSocketServer } from './websocket/server';
 import { sensorSimulator } from './simulation/sensorSimulator';
 
@@ -49,6 +50,11 @@ async function startServer() {
     // 1. Initialize SQLite database & schema
     await getDatabase();
     await initSchema();
+    const userCount = await queryRow<{ count: number }>('SELECT COUNT(*) as count FROM users');
+    if (!userCount || userCount.count === 0) {
+      console.log('🌱 No users found. Auto-seeding initial demo accounts...');
+      await seedDatabase();
+    }
     console.log('✅ SQLite Database & Relational Schema ready.');
 
     // 2. Attach WebSocket Server

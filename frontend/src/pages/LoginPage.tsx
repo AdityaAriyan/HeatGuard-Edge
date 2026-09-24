@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Shield, Lock, Mail, ArrowRight, UserCheck, ShieldAlert, Cpu } from 'lucide-react';
+import { Shield, Lock, Mail, ArrowRight, UserCheck, Activity, HardDrive, AlertCircle } from 'lucide-react';
 import { MedicalDisclaimer } from '../components/common/MedicalDisclaimer';
 
 interface LoginPageProps {
@@ -20,7 +20,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSuccess }) => {
       await login(email, password);
       onSuccess();
     } catch (err: any) {
-      setError(err.message || 'Invalid email or password');
+      setError(err.message || 'Invalid email or password. Verify credentials.');
     }
   };
 
@@ -30,12 +30,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSuccess }) => {
       await quickLogin(demoEmail);
       onSuccess();
     } catch (err: any) {
-      setError(err.message || 'Login failed');
+      setError(err.message || 'Login failed. Verify backend connectivity.');
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#07090e] flex flex-col items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-[#07090e] flex flex-col items-center justify-center p-4 relative overflow-hidden select-none">
       {/* Background Glow */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -64,8 +64,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSuccess }) => {
             className="w-full p-3 rounded-xl bg-cyan-950/40 hover:bg-cyan-900/60 border border-cyan-500/40 text-left flex items-center justify-between transition group"
           >
             <div>
-              <div className="text-xs font-bold text-white group-hover:text-cyan-300 transition">
-                Arun Sharma (Worker - Delhi Site)
+              <div className="text-xs font-bold text-white group-hover:text-cyan-300 transition flex items-center gap-1.5">
+                <UserCheck className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Arun Sharma (Worker - Delhi Site)</span>
               </div>
               <div className="text-[10px] text-zinc-400 font-mono">user@heatguard.demo</div>
             </div>
@@ -77,8 +78,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSuccess }) => {
             className="w-full p-3 rounded-xl bg-indigo-950/40 hover:bg-indigo-900/60 border border-indigo-500/40 text-left flex items-center justify-between transition group"
           >
             <div>
-              <div className="text-xs font-bold text-white group-hover:text-indigo-300 transition">
-                Dr. Priya Nair (Lead Caregiver)
+              <div className="text-xs font-bold text-white group-hover:text-indigo-300 transition flex items-center gap-1.5">
+                <Activity className="w-3.5 h-3.5 text-indigo-400" />
+                <span>Dr. Priya Nair (Lead Caregiver)</span>
               </div>
               <div className="text-[10px] text-zinc-400 font-mono">caregiver@heatguard.demo</div>
             </div>
@@ -90,8 +92,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSuccess }) => {
             className="w-full p-3 rounded-xl bg-purple-950/40 hover:bg-purple-900/60 border border-purple-500/40 text-left flex items-center justify-between transition group"
           >
             <div>
-              <div className="text-xs font-bold text-white group-hover:text-purple-300 transition">
-                Rajesh Verma (System Admin)
+              <div className="text-xs font-bold text-white group-hover:text-purple-300 transition flex items-center gap-1.5">
+                <HardDrive className="w-3.5 h-3.5 text-purple-400" />
+                <span>Rajesh Verma (System Admin)</span>
               </div>
               <div className="text-[10px] text-zinc-400 font-mono">admin@heatguard.demo</div>
             </div>
@@ -102,14 +105,15 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSuccess }) => {
         {/* Divider */}
         <div className="relative flex items-center justify-center">
           <div className="border-t border-white/10 w-full" />
-          <span className="bg-[#090d16] px-3 text-[10px] font-mono text-zinc-500 uppercase">or custom login</span>
+          <span className="bg-[#090d16] px-3 text-[10px] font-mono text-zinc-500 uppercase">or credentials login</span>
         </div>
 
         {/* Manual Login Form */}
         <form onSubmit={handleManualLogin} className="space-y-4 text-xs font-mono">
           {error && (
-            <div className="p-3 rounded-xl bg-red-950/60 border border-red-500/50 text-red-300 text-xs">
-              {error}
+            <div className="p-3 rounded-xl bg-red-950/60 border border-red-500/50 text-red-300 text-xs flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 flex-shrink-0 text-red-400" />
+              <span>{error}</span>
             </div>
           )}
 
@@ -129,7 +133,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onSuccess }) => {
           </div>
 
           <div>
-            <label className="text-zinc-400 block mb-1">Password</label>
+            <label className="text-zinc-400 block mb-1">Password (Default: HeatGuard@123)</label>
             <div className="relative">
               <Lock className="w-4 h-4 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2" />
               <input

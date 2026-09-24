@@ -6,7 +6,7 @@ import { Navbar } from './components/common/Navbar';
 import { Sidebar } from './components/common/Sidebar';
 import { FallAlertModal } from './components/common/FallAlertModal';
 
-// Pages
+// HeatGuard-Edge Pages
 import { PersonalDashboard } from './pages/PersonalDashboard';
 import { PersonalRiskCenter } from './pages/PersonalRiskCenter';
 import { VitalsPage } from './pages/VitalsPage';
@@ -27,10 +27,10 @@ const MainApp: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#07090e] flex items-center justify-center font-mono text-cyan-400 text-xs">
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping" />
-          <span>INITIALIZING HEATGUARD-EDGE PLATFORM...</span>
+      <div className="min-h-screen bg-[#07090e] flex items-center justify-center font-mono text-cyan-400 text-xs select-none">
+        <div className="flex items-center gap-3 p-4 rounded-2xl bg-zinc-900/60 border border-white/10 shadow-2xl">
+          <span className="w-3 h-3 rounded-full bg-cyan-400 animate-ping" />
+          <span className="font-bold tracking-wider uppercase">INITIALIZING HEATGUARD-EDGE PLATFORM...</span>
         </div>
       </div>
     );
@@ -76,7 +76,7 @@ const MainApp: React.FC = () => {
       <Navbar currentRoute={currentRoute} onNavigate={setCurrentRoute} />
       <div className="flex flex-1">
         <Sidebar currentRoute={currentRoute} onNavigate={setCurrentRoute} />
-        <main className="flex-1 p-4 lg:p-8 max-w-7xl mx-auto w-full min-w-0">
+        <main className="flex-1 p-4 lg:p-8 max-w-[1540px] mx-auto w-full min-w-0">
           {renderActivePage()}
         </main>
       </div>
