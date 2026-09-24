@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Local database
+*.sqlite
+*.sqlite3
+*.db
+
+# Environment variables
+.env
+.env.*
+!.env.example
