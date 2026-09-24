@@ -1,0 +1,297 @@
+/**
+ * Simulated Hardware Sensors for HeatGuard-Edge
+ * Generates biologically and environmentally correlated data streams
+ * for 9 distinct scenarios.
+ */
+
+import { EdgeSensorPacket } from './interfaces';
+
+export type ScenarioType =
+  | 'NORMAL'
+  | 'HEAT_WAVE'
+  | 'DEHYDRATION'
+  | 'AIR_POLLUTION'
+  | 'FATIGUE'
+  | 'FALL'
+  | 'CRITICAL'
+  | 'FLOOD'
+  | 'CYCLONE';
+
+export interface ScenarioProfile {
+  name: ScenarioType;
+  label: string;
+  description: string;
+  ambientTemp: number; // °C
+  humidity: number; // %
+  aqi: number;
+  pm25: number;
+  baseHeartRate: number; // BPM
+  baseSpo2: number; // %
+  skinTemp: number; // °C
+  systolic: number;
+  diastolic: number;
+  activityState: EdgeSensorPacket['activityState'];
+  accelX: number;
+  accelY: number;
+  accelZ: number;
+  gyroX: number;
+  gyroY: number;
+  gyroZ: number;
+  exposureMinutes: number;
+  sleepMinutes: number;
+}
+
+export const SCENARIO_PRESETS: Record<ScenarioType, ScenarioProfile> = {
+  NORMAL: {
+    name: 'NORMAL',
+    label: 'Normal Healthy Baseline',
+    description: 'Comfortable indoor/outdoor conditions, stable vitals, resting/light activity.',
+    ambientTemp: 26.5,
+    humidity: 50.0,
+    aqi: 45,
+    pm25: 12.0,
+    baseHeartRate: 74,
+    baseSpo2: 98.2,
+    skinTemp: 36.4,
+    systolic: 118,
+    diastolic: 78,
+    activityState: 'NORMAL_WALK',
+    accelX: 0.05,
+    accelY: 0.12,
+    accelZ: 0.98,
+    gyroX: 12,
+    gyroY: 8,
+    gyroZ: 5,
+    exposureMinutes: 20,
+    sleepMinutes: 460,
+  },
+  HEAT_WAVE: {
+    name: 'HEAT_WAVE',
+    label: 'Extreme Heat Wave',
+    description: 'High ambient temperature (>39°C), high humidity, elevated skin temperature and heart rate.',
+    ambientTemp: 41.2,
+    humidity: 68.0,
+    aqi: 85,
+    pm25: 28.0,
+    baseHeartRate: 112,
+    baseSpo2: 96.5,
+    skinTemp: 38.2,
+    systolic: 132,
+    diastolic: 84,
+    activityState: 'ACTIVE_WORK',
+    accelX: 0.18,
+    accelY: 0.35,
+    accelZ: 0.95,
+    gyroX: 45,
+    gyroY: 30,
+    gyroZ: 22,
+    exposureMinutes: 140,
+    sleepMinutes: 420,
+  },
+  DEHYDRATION: {
+    name: 'DEHYDRATION',
+    label: 'Dehydration Risk',
+    description: 'Thermal strain with heart rate trending upward, high activity in heat, prolonged exposure.',
+    ambientTemp: 38.8,
+    humidity: 45.0,
+    aqi: 65,
+    pm25: 18.0,
+    baseHeartRate: 118,
+    baseSpo2: 96.0,
+    skinTemp: 37.8,
+    systolic: 136,
+    diastolic: 88,
+    activityState: 'VIGOROUS',
+    accelX: 0.32,
+    accelY: 0.45,
+    accelZ: 1.05,
+    gyroX: 80,
+    gyroY: 60,
+    gyroZ: 40,
+    exposureMinutes: 195,
+    sleepMinutes: 380,
+  },
+  AIR_POLLUTION: {
+    name: 'AIR_POLLUTION',
+    label: 'Severe Air Pollution / Smog',
+    description: 'Hazardous AQI (>320), high PM2.5, declining SpO2 level, elevated respiratory compensation.',
+    ambientTemp: 28.0,
+    humidity: 62.0,
+    aqi: 345,
+    pm25: 280.0,
+    baseHeartRate: 98,
+    baseSpo2: 92.4,
+    skinTemp: 36.6,
+    systolic: 126,
+    diastolic: 82,
+    activityState: 'NORMAL_WALK',
+    accelX: 0.08,
+    accelY: 0.15,
+    accelZ: 0.98,
+    gyroX: 18,
+    gyroY: 14,
+    gyroZ: 9,
+    exposureMinutes: 90,
+    sleepMinutes: 440,
+  },
+  FATIGUE: {
+    name: 'FATIGUE',
+    label: 'Severe Fatigue & Sleep Deficit',
+    description: 'Severe sleep deprivation (<3.5h), elevated resting heart rate, long continuous working hours.',
+    ambientTemp: 30.5,
+    humidity: 55.0,
+    aqi: 70,
+    pm25: 22.0,
+    baseHeartRate: 92,
+    baseSpo2: 95.8,
+    skinTemp: 36.5,
+    systolic: 128,
+    diastolic: 84,
+    activityState: 'RESTING',
+    accelX: 0.02,
+    accelY: 0.04,
+    accelZ: 0.99,
+    gyroX: 5,
+    gyroY: 4,
+    gyroZ: 2,
+    exposureMinutes: 310,
+    sleepMinutes: 210,
+  },
+  FALL: {
+    name: 'FALL',
+    label: 'Possible Fall & Inactivity Event',
+    description: 'Sudden high-g impact (>3.2g) followed by horizontal orientation and complete inactivity.',
+    ambientTemp: 33.0,
+    humidity: 60.0,
+    aqi: 80,
+    pm25: 25.0,
+    baseHeartRate: 125,
+    baseSpo2: 94.0,
+    skinTemp: 37.1,
+    systolic: 142,
+    diastolic: 92,
+    activityState: 'POSSIBLE_FALL',
+    accelX: 0.01,
+    accelY: 0.98,
+    accelZ: 0.12, // User lying sideways/flat
+    gyroX: 280,
+    gyroY: 190,
+    gyroZ: 140,
+    exposureMinutes: 110,
+    sleepMinutes: 410,
+  },
+  CRITICAL: {
+    name: 'CRITICAL',
+    label: 'Multi-Factor Critical Emergency',
+    description: 'Severe heat stress, elevated HR (138+ BPM), dangerous skin temp, low SpO2, and hypertension.',
+    ambientTemp: 43.5,
+    humidity: 78.0,
+    aqi: 280,
+    pm25: 190.0,
+    baseHeartRate: 142,
+    baseSpo2: 89.5,
+    skinTemp: 39.4,
+    systolic: 168,
+    diastolic: 104,
+    activityState: 'VIGOROUS',
+    accelX: 0.45,
+    accelY: 0.55,
+    accelZ: 1.25,
+    gyroX: 110,
+    gyroY: 95,
+    gyroZ: 70,
+    exposureMinutes: 240,
+    sleepMinutes: 280,
+  },
+  FLOOD: {
+    name: 'FLOOD',
+    label: 'Disaster: Urban / Rural Flood',
+    description: 'Extreme humidity, high water exposure, elevated physical struggle and vital stress.',
+    ambientTemp: 29.5,
+    humidity: 96.0,
+    aqi: 55,
+    pm25: 15.0,
+    baseHeartRate: 106,
+    baseSpo2: 95.5,
+    skinTemp: 35.8, // Mild hypothermia risk or damp skin
+    systolic: 124,
+    diastolic: 82,
+    activityState: 'ACTIVE_WORK',
+    accelX: 0.22,
+    accelY: 0.38,
+    accelZ: 1.02,
+    gyroX: 55,
+    gyroY: 42,
+    gyroZ: 30,
+    exposureMinutes: 180,
+    sleepMinutes: 360,
+  },
+  CYCLONE: {
+    name: 'CYCLONE',
+    label: 'Disaster: Severe Cyclonic Storm',
+    description: 'Violent winds, barometric drop, torrential rain, high anxiety and cardiovascular response.',
+    ambientTemp: 27.0,
+    humidity: 92.0,
+    aqi: 40,
+    pm25: 10.0,
+    baseHeartRate: 114,
+    baseSpo2: 96.0,
+    skinTemp: 36.0,
+    systolic: 138,
+    diastolic: 90,
+    activityState: 'ACTIVE_WORK',
+    accelX: 0.35,
+    accelY: 0.42,
+    accelZ: 1.15,
+    gyroX: 75,
+    gyroY: 65,
+    gyroZ: 48,
+    exposureMinutes: 150,
+    sleepMinutes: 320,
+  },
+};
+
+/**
+ * Sensor Generator Utility to produce small, realistic physiological noise/jitter
+ */
+export function generateSyntheticReading(
+  scenario: ScenarioType,
+  userId: string,
+  deviceId: string = 'DEV-HG-EDGE-01',
+  geoCoords: { lat: number; lng: number } = { lat: 28.6139, lng: 77.209 }
+): EdgeSensorPacket {
+  const profile = SCENARIO_PRESETS[scenario] || SCENARIO_PRESETS.NORMAL;
+
+  // Add realistic biological jitter
+  const hrJitter = (Math.random() - 0.5) * 3;
+  const spo2Jitter = (Math.random() - 0.5) * 0.4;
+  const skinJitter = (Math.random() - 0.5) * 0.15;
+  const ambientJitter = (Math.random() - 0.5) * 0.3;
+
+  return {
+    deviceId,
+    userId,
+    timestamp: new Date().toISOString(),
+    heartRate: Math.round(profile.baseHeartRate + hrJitter),
+    spo2: Math.min(100, Math.round((profile.baseSpo2 + spo2Jitter) * 10) / 10),
+    skinTemperature: Math.round((profile.skinTemp + skinJitter) * 10) / 10,
+    ambientTemperature: Math.round((profile.ambientTemp + ambientJitter) * 10) / 10,
+    humidity: Math.round(profile.humidity),
+    systolic: profile.systolic + Math.round((Math.random() - 0.5) * 4),
+    diastolic: profile.diastolic + Math.round((Math.random() - 0.5) * 2),
+    isBpEstimated: true,
+    accelX: profile.accelX,
+    accelY: profile.accelY,
+    accelZ: profile.accelZ,
+    gyroX: profile.gyroX,
+    gyroY: profile.gyroY,
+    gyroZ: profile.gyroZ,
+    activityState: profile.activityState,
+    aqi: profile.aqi,
+    pm25: profile.pm25,
+    latitude: geoCoords.lat + (Math.random() - 0.5) * 0.001,
+    longitude: geoCoords.lng + (Math.random() - 0.5) * 0.001,
+    exposureMinutes: profile.exposureMinutes,
+    sleepMinutesEstimated: profile.sleepMinutes,
+  };
+}

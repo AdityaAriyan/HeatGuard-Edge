@@ -1,0 +1,13 @@
+{
+  "name": "heatguard-edge",
+  "version": "1.0.0",
+  "description": "HeatGuard-Edge Privacy-Preserving Health Companion & Edge-AI Platform",
+  "scripts": {
+    "backend:dev": "npm --prefix backend run dev",
+    "backend:build": "npm --prefix backend run build",
+    "backend:test": "npm --prefix backend test",
+    "backend:seed": "npm --prefix backend run seed",
+    "frontend:dev": "npm --prefix frontend run dev",
+    "frontend:build": "npm --prefix frontend run build"
+  }
+}
